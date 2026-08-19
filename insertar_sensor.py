@@ -50,3 +50,4 @@ def guardar_datos(id_sensor: str, temperatura: float) -> None:
         
 if __name__ == "__main__":
     guardar_datos("ROBOT-KUKA-02", 69.8)
+    

@@ -5,3 +5,4 @@ def test_motor_seguro():
 
 def test_motor_peligro():
     assert evaluar_motor(95) == "ALERTA"
+    
