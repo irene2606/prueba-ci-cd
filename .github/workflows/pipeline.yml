@@ -1,4 +1,4 @@
-name: Pipeline Multi-Fase
+name: Pipeline Multi-Fase Industrial
 
 on: [push]
 
@@ -10,7 +10,7 @@ jobs:
       - name: Usar Python 3.10
         uses: actions/setup-python@v5
         with:
-          python-version:'3.10'
+          python-version: '3.10'
       - name: Instalar Linter
         run: pip install flake8
       - name: Ejecutar Flake8
@@ -33,7 +33,7 @@ jobs:
   empaquetado:
     needs: pruebas
     runs-on: ubuntu-latest
-    step:
+    steps:
       - uses: actions/checkout@v4
-      - name: Construir imagen docker
-        run: docker build -t motor-app
+      - name: Construir imagen Docker
+        run: docker build -t motor-app .
