@@ -1,0 +1,39 @@
+name: Pipeline Multi-Fase
+
+on: [push]
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version:'3.10'
+      - name: Instalar Linter
+        run: pip install flake8
+      - name: Ejecutar Flake8
+        run: flake8 app.py
+
+  pruebas:
+    needs: calidad
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar Pytest
+        run: pip install pytest
+      - name: Ejecutar Tests
+        run: pytest test_app.py
+
+  empaquetado:
+    needs: pruebas
+    runs-on: ubuntu-latest
+    step:
+      - uses: actions/checkout@v4
+      - name: Construir imagen docker
+        run: docker build -t motor-app
