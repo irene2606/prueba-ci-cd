@@ -1,4 +1,4 @@
-name: ["Release - empaquetado Docker "]
+name: Release - empaquetado Docker
 
 on:
   workflow_run:

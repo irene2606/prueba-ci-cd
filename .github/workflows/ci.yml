@@ -1,4 +1,4 @@
-name: ["CI - calidad y pruebas"]
+name: CI - calidad y pruebas
 
 on: 
   push:
