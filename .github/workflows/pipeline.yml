@@ -57,7 +57,7 @@ jobs:
         run: python insertar_sensor.py
 
   empaquetado:
-    needs: prueba_base_datos
+    needs: pruebas_base_datos
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
