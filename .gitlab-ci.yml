@@ -1,24 +1,40 @@
 image: python:3.10-slim
 
 stages:
-  -calidad
-  -pruebas
-  -empaquetado
+  - calidad
+  - pruebas
+  - prueba_base_datos
+  - empaquetado
 
 revisar_formato:
   stage: calidad
   script:
-    -pip install flake8
-    -flake8 app.py
+    - pip install flake8
+    - flake8 app.py
 
 ejecutar_test:
   stage: pruebas
   script:
-    -pip install pytest
-    -pytest test_app.py
+    - pip install pytest
+    - pytest test_app.py
+
+insertar_base_datos:
+  stage: prueba_base_datos
+  services:
+    image: postgres:15-alpine
+    alias: postgres
+  variables:
+    POSTGRES_USER: $DB_USER
+    POSTGRES_PASSWORD: $DB_PASSWORD
+    POSTGRES_DB: $DB_NAME
+    DB_HOST: postgres  # En GitLab, no se usa localhost, se usa el alias
+    DB_PORT: "5432"
+  script:
+    - pip install psycopg2-binary
+    - python insertar_sensor.py
   
 construir_docker:
   stage: empaquetado
   image: docker:20.10.16
   script:
-    -docker build -t motor-app
+    - docker build -t motor-app
