@@ -1,0 +1,55 @@
+name: ["CI - calidad y pruebas"]
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar dependencias
+        run: pip install flake8
+      - name: Ejecutar Linter
+        run: flake8 app.py
+
+  pruebaas_y_bd:
+    needs: calidad
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: ${{secrets.DB_USER}}
+          POSTGRES_PASSWORD: ${{secrets.DB_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DB_NAME}}
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v4
+      - name: Usar Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar Pytest y dependencias
+        run: pip install pytest psycopg2-binary
+      - name: Ejecutar tests unitarios
+        run: pytest test_app.py
+      - name: Ejecutar insertar base de datos
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: python insertar_sensor.py
+      
