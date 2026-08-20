@@ -32,7 +32,7 @@ jobs:
 
   pruebas_base_datos:
     needs: pruebas
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
 
     services:
       postgres:
