@@ -1,0 +1,10 @@
+[
+    {
+        "id_sensor": "ROBOT-KUKA-03",
+        "temperatura": 71.5
+    },
+    {
+        "id_sensor": "ROBOT-KUKA-04",
+        "temperatura": 85.2
+    }
+]

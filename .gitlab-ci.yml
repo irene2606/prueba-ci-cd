@@ -1,0 +1,24 @@
+image: python:3.10-slim
+
+stages:
+  -calidad
+  -pruebas
+  -empaquetado
+
+revisar_formato:
+  stage: calidad
+  script:
+    -pip install flake8
+    -flake8 app.py
+
+ejecutar_test:
+  stage: pruebas
+  script:
+    -pip install pytest
+    -pytest test_app.py
+  
+construir_docker:
+  stage: empaquetado
+  image: docker:20.10.16
+  script:
+    -docker build -t motor-app

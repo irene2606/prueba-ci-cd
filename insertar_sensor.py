@@ -1,6 +1,8 @@
 # CÓDIGO DEFECTUOSO ENTREGADO POR LA EMPRESA
-import psycopg2
-import logging
+import psycopg2 #conectar a la base de datos
+import logging #para los logs
+import os #secretos
+import json
 
 # 1. Configurar logging industrial
 logging.basicConfig(
@@ -14,11 +16,11 @@ def guardar_datos(id_sensor: str, temperatura: float) -> None:
     try:
         # Conexión básica
         conexion = psycopg2.connect(
-            host="localhost",
-            port=5432,
-            database="prueba",
-            user="admin",
-            password="password123"
+            host=os.getenv("DB_HOST", "localhost"),
+            port=os.getenv("DB_PORT", "5432"),
+            database=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD")
         )
         cursor = conexion.cursor()
         
@@ -49,5 +51,13 @@ def guardar_datos(id_sensor: str, temperatura: float) -> None:
         logger.error(f"Error inesperado: {e}")
         
 if __name__ == "__main__":
-    guardar_datos("ROBOT-KUKA-02", 69.8)
+    try:
+        with open("datos.json", "r") as archivo:
+            lista_lecturas = json.load(archivo)
+            
+        for lectura in lista_lecturas:
+            guardar_datos(lectura["id_sensor"], lectura["temperatura"])
+            
+    except FileNotFoundError:
+        logger.error("No se encontró el archivo datos.json")
     
